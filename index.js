@@ -1,9 +1,14 @@
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
+const morgan = require('morgan')
 
 
 app.use(bodyParser.json())
+
+morgan.token('data', function (req, res) { return JSON.stringify(req.body) })
+
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :data'))
 
 let persons = [
   { id: 1, name: 'Arto Hellas', number: '040-123456' },
@@ -74,6 +79,11 @@ app.delete('/api/persons/:id', (request, response) => {
 
   response.status(204).end()
 })
+
+//morgan('tiny')
+
+//morgan(':method :url :status :res[content-length] - :response-time ms')
+
 
 const PORT = 3001
 app.listen(PORT, () => {
